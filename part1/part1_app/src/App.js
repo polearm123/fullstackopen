@@ -1,0 +1,79 @@
+import React from 'react'
+
+function App() {
+  
+  const course = 'Half Stack application development'
+  const part1 = 'Fundamentals of React'
+  const exercises1 = 10
+  const part2 = 'Using props to pass data'
+  const exercises2 = 7
+  const part3 = 'State of a component'
+  const exercises3 = 14
+  
+
+  return (
+    <div>
+
+      <Header course_name={course}/>
+      <Content part1={part1} part2={part2} part3={part3} exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+      <Total exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+
+    </div>
+  );
+}
+
+function Header(props){
+
+  return (
+
+    <h1>{props.course}</h1>
+
+  );
+
+}
+
+function Content(props){
+
+ 
+
+  return (
+    
+    <div>
+    <p>
+      <Part exerciseName = {props.part1} numberOfExercises={props.exercises1}/>
+    </p>
+    <p>
+      <Part exerciseName = {props.part2} numberOfExercises={props.exercises2}/>
+    </p>
+    <p>
+      <Part exerciseName = {props.part3} numberOfExercises={props.exercises3}/>
+    </p>
+    </div>
+  );
+
+}
+
+function Total(props){
+
+  
+
+  return (
+
+    <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
+
+  );
+
+}
+
+function Part(props){
+
+  return (
+    <p>{props.exerciseName} {props.numberOfExercises} </p>
+  );
+
+
+
+
+}
+
+export default App;
