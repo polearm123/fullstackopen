@@ -2,27 +2,41 @@ import React from 'react'
 
 function App() {
   
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
   
 
   return (
+
     <div>
 
-      <Header course_name={course}/>
-      <Content part1={part1} part2={part2} part3={part3} exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
-      <Total exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+      <Header course_name={course.name}/>
+      <Content parts = {course.parts}/>
+      <Total parts = {course.parts}/>
 
     </div>
+    
   );
 }
 
 function Header(props){
+
+  console.log(props)
 
   return (
 
@@ -34,45 +48,44 @@ function Header(props){
 
 function Content(props){
 
- 
-
+    console.log(props)
   return (
     
     <div>
     <p>
-      <Part exerciseName = {props.part1} numberOfExercises={props.exercises1}/>
+      <Part exerciseName = {props.parts[0].name} numberOfExercises={props.parts[0].exercises}/>
     </p>
     <p>
-      <Part exerciseName = {props.part2} numberOfExercises={props.exercises2}/>
+      <Part exerciseName = {props.parts[1].name} numberOfExercises={props.parts[1].exercises}/>
     </p>
     <p>
-      <Part exerciseName = {props.part3} numberOfExercises={props.exercises3}/>
+      <Part exerciseName = {props.parts[2].name} numberOfExercises={props.parts[2].exercises}/>
     </p>
     </div>
+
   );
 
 }
+
 
 function Total(props){
 
-  
-
   return (
 
-    <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
-
-  );
+    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+  
+    );
 
 }
+
 
 function Part(props){
 
   return (
+
     <p>{props.exerciseName} {props.numberOfExercises} </p>
-  );
-
-
-
+  
+    );
 
 }
 
