@@ -1,92 +1,144 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function App() {
-  
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+// const App = () => {
+
+//   const [ counter, setCounter ] = useState(0)
+
+//   const increaseByOne = () => {
+//     setCounter(counter+1)
+//   }
+
+//   const decreaseByOne = () => {
+//     setCounter(counter-1)
+//   }
+
+//   const resetCounter = () => {
+//     setCounter(0)
+//   }
+
+//   console.log('rendering...', counter)
+
+//   return (
+//     <div>
+
+//       <Button handleClick={increaseByOne} text="increase" />
+
+//       <Button handleClick={decreaseByOne} text="decrease" />
+
+//       <Button handleClick={resetCounter} text="reset" />
+
+//       <DisplayClicks counter={counter} />
+
+//     </div>
+//   )
+// }
+
+// const DisplayClicks = ({counter}) => {
+
+//   return(
+
+//     <div>{counter}</div>
+
+//   );
+
+
+// }
+
+
+
+const App = () => {
+
+  //set two separate state pieces
+
+  //state is now an object, set click updates the entire objects
+  //functions below alter the object and use setClick to update the entire object
+  const [right, setRight] = useState(0)
+  const [left, setLeft] = useState(0)
+  const [allClicks,setAll] = useState([])
+
+
+  //whenever the right is clicked the string R is added to the allClicks 
+  //array
+  const setRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(right+1)
+
   }
-  
 
+
+  //when the left button is clicked the string L is concatenated to the end 
+  //of the all clicks array
+  const setLeftClick = () => {
+
+    //object spread notation, copies all properties from the clicks object
+    //when a property is specified and changed, it is added to the object
+    setAll(allClicks.concat('L'))
+    setLeft(left+1)
+
+  }
+
+ 
   return (
-
     <div>
-
-      <Header course_name={course.name}/>
-      <Content parts = {course.parts}/>
-      <Total parts = {course.parts}/>
-
+      {left}
+      
+      
+      <Button handleClick={setLeftClick} text={"left"}/>
+      <Button handleClick={setRightClick} text={"right"} />
+        
+     
+      {right}
+      <History allClicks = {allClicks}/>
     </div>
-    
-  );
+  )
 }
 
-function Header(props){
 
-  console.log(props)
+//example of conditional display
+//if there are no clicks in the click history
+//it returns a message encouraging the user to engage
+//if there are clicks, it displays the history of all clicks
+
+
+
+
+const History = (props) => {
+
+  if(props.allClicks.length === 0)
+  {
+    return(
+      <div>
+        app is used by pressing the left or right buttons!
+      </div>
+    )
+  }
 
   return (
-
-    <h1>{props.course}</h1>
-
-  );
-
-}
-
-function Content(props){
-
-    console.log(props)
-  return (
-    
     <div>
-    <p>
-      <Part exerciseName = {props.parts[0].name} numberOfExercises={props.parts[0].exercises}/>
-    </p>
-    <p>
-      <Part exerciseName = {props.parts[1].name} numberOfExercises={props.parts[1].exercises}/>
-    </p>
-    <p>
-      <Part exerciseName = {props.parts[2].name} numberOfExercises={props.parts[2].exercises}/>
-    </p>
+      button press history: {props.allClicks.join(' ')}
     </div>
+
+  )
+}
+
+
+
+const Button = ({handleClick,text}) => {
+
+  return (
+
+    <button onClick={handleClick}>
+      {text}
+    </button>
 
   );
 
-}
-
-
-function Total(props){
-
-  return (
-
-    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-  
-    );
 
 }
 
 
-function Part(props){
 
-  return (
 
-    <p>{props.exerciseName} {props.numberOfExercises} </p>
-  
-    );
 
-}
 
-export default App;
+export default App
