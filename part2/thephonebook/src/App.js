@@ -1,46 +1,131 @@
 import React, { useState } from 'react'
 
 function App() {
-  
-    const [persons,setPersons] = useState([{name:'arto Hellas'}])
 
-    const [newName,setName] = useState('enter something here...')
+    //setting all states that need to be monitored and retrieveds
+    const [persons,setPersons] = useState([{name:'arto Hellas',number:'556677'}])
+
+    const [newName,setName] = useState('')
+
+    const [newNumber,setNumber] = useState('')
   
+    const [newFilter,setFilter] = useState('')
+
+    const [filteredList,setFilteredList] = useState([])
+
+
+    //sets the currentName state from the name input box
     const setCurrentName = (event) => {
-      // console.log(event.target.value)
+      console.log("name is:",event.target.value)
       setName(event.target.value)
     }
 
+    //sets the currentNumber state retrieved from the number input box
+    const setCurrentNumber = (event) => {
+      setNumber(event.target.value)
+    }
+
+
+    //adds a new person to the phosne book if their name isn't already included
+    //an alert is given to the user if the name is a copy
     const addNewPerson = (event) => {
       event.preventDefault()
-      var newPerson = {name:newName}
-      console.log(persons)
-      setPersons(persons.concat(newPerson))
-      setName('')
-
+      const found = persons.find(element => element.name === newName)
+      if(!found){
+        var newPerson = {name:newName,number:newNumber}
+        console.log(persons)
+        setPersons(persons.concat(newPerson))
+        setNumber('')
+        setName('')
+      }else{
+        alert(`${newName} is already in the phonebook`)
+        setName('')
+        setNumber('')
+      }
 
     }
 
 
+    //sets the filter used to present the user with people in the phonebook
+    //matching the input in the filter input box
+    const setCurrentFilter = (event) => {
+      console.log(event.target.value)
+      setFilter(event.target.value)
+      const newlyFilteredList = persons.filter((person)=>person.name.includes(newFilter))
+      setFilteredList(newlyFilteredList)
+    }
 
     return (
       <div>
         <h2>Phonebook</h2>
-        <form onSubmit={addNewPerson}>
-
-          <div>
-            name: <input value={newName} onChange={setCurrentName}/>
-          </div>
-
-          <div>
-            <button type="submit">add</button>
-          </div>
-
-        </form>
+          <Filter newFilter={newFilter} setCurrentFilter={setCurrentFilter}/>
+          
+        <h2>add a new contact! </h2>
+          <Form addNewPerson={addNewPerson} setCurrentName={setCurrentName} setCurrentNumber={setCurrentNumber} newName={newName} newNumber={newNumber}/>
+        
         <h2>Numbers</h2>
-        ...
+          <PeopleList filteredList={filteredList}/>
       </div>
     )
+  
+}
+
+
+//components to show a list of People in the phone book matching the current filter
+const PeopleList = ({filteredList}) => {
+  return (
+    <ul>
+      {
+      filteredList.map((person)=>
+        <Person key={person.name} name={person.name} number={person.number} />
+      )}
+    </ul>
+  );
+}
+
+
+//form component for adding new phone contacts
+const Form = ({addNewPerson,setCurrentName,setCurrentNumber,newName,newNumber}) => {
+  return(
+    <form onSubmit={addNewPerson}>
+
+    <div>
+      Name:<input value={newName} onChange={setCurrentName}/>
+    </div>
+
+    <div>
+      Number:<input value={newNumber} onChange={setCurrentNumber}></input>
+    </div>
+
+    <div>
+      <button type="submit">add</button>
+    </div>
+
+  </form>
+  );
+}
+
+
+//filter component that handles the filter state which determines which
+//numbers are output on the screen from the phonebook
+const Filter = ({newFilter,setCurrentFilter}) => {
+  return(
+    <div>
+            filter: <input value={newFilter} onChange={setCurrentFilter} />
+    </div>
+  );
+}
+
+
+//A person component to control how the contents of the person object 
+//is presented to the user
+const Person = ({number,name}) => {
+  console.log(number)
+  return (
+    <div>
+      <li>{name} : {number}</li>
+    </div>
+  );
 }
 
 export default App;
