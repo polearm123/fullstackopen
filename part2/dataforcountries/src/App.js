@@ -1,15 +1,16 @@
 import React , {useState,useEffect} from 'react';
 import axios from 'axios'
 
+const api_key = process.env.REACT_APP_API_KEY
+
+
 function App() {
 
   const [newFilter,setFilter] = useState('nothing')
   const [countries,setCountries] = useState([])
 
-
   //effect that retrieves a list of countries from country API
   useEffect(() => {
-    console.log("effect")
     axios
       .get(`https://restcountries.eu/rest/v2/all`)
       .then(response => {
@@ -38,7 +39,6 @@ function App() {
 
 const Countries = ({retrievedCountries,newFilter}) => {
   const countryList = retrievedCountries.filter((element) => element.name.includes(newFilter))
-  console.log(countryList)
   if(countryList.length > 1 && countryList.length <=10)
   {
     return(
@@ -82,7 +82,6 @@ const CountryName = ({countryName}) => {
 }
 
 const SpecificCountry = (specificCountry) => {
-  console.log(specificCountry.specificCountry.language)
   
 
   return(
@@ -101,10 +100,44 @@ const SpecificCountry = (specificCountry) => {
       src={specificCountry.specificCountry.flag}
       alt="new" width="300" height="300"
       />
+
+      <Weather capitalName = {specificCountry.specificCountry.capital}/>
     </div>
   );
 
 }
+
+const Weather = ({capitalName}) => {
+  const params = {
+    access_key: api_key,
+    query: capitalName
+  }
+
+  console.log(params)
+
+  
+
+  axios
+  .get('http://api.weatherstack.com/current',{params})
+  .then((response) => {
+    const apiResponse = response.data
+    console.log(apiResponse)
+  
+    console.log(apiResponse.current.temperature)
+  
+  }).catch(error => {
+    console.log(error)
+  })
+  
+  
+  return (
+    <div>
+    <p>weather:</p>
+    </div>
+    
+  );
+}
+
 
 const Language = ({language}) => {
   return(
