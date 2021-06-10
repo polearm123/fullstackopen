@@ -1,19 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import Note from './components/Note'
+import axios from 'axios'
 
 
 function App(props) {
 
-  const [notes,setNotes] = useState(props.notes)
+  const [notes,setNotes] = useState([])
   const [newNote,setNewNote] = useState('a new note...')
   const [showAll,setShowAll] = useState(false)
 
   //checks if show all is true, if so it prints all notes, if not it only prints the important ones
 
+  const hook = () => {
+    console.log('effect')
+    axios
+      //.get makes request .then is an event handler that handles the
+      //response from the server, after the promise has been fulfilled
+      //the component is re-rendered using change state
+      .get('http://localhost:3001/notes').then(response=>{
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+
+
+
+  }
+
+  useEffect(hook,[])
+
   const notesToShow = showAll ? notes:notes.filter(note=>note.important === true)
-
-
-
   //creates a new note object with the newNote value at the time of the button click
   //adds the current date, a random importance and resets the newNote value 
   //as if the input has cleared after submission
@@ -42,7 +57,6 @@ function App(props) {
   //receieves a change
   //this makes it possible to retrieve the last newNote on submission button
   //press
-
   const handleNoteChange = (event) => {
 
     console.log(event.target.value)

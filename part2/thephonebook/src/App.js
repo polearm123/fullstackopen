@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 function App() {
 
     //setting all states that need to be monitored and retrieveds
-    const [persons,setPersons] = useState([{name:'arto Hellas',number:'556677'}])
+    const [persons,setPersons] = useState([])
 
     const [newName,setName] = useState('')
 
@@ -13,7 +14,19 @@ function App() {
 
     const [filteredList,setFilteredList] = useState([])
 
-
+    //queries the json server if there is a valid response
+    //prints promise fulfilled and changes the persons state
+    //to the data returned in the response object.
+    useEffect(() => {
+      console.log("effect")
+      axios
+        .get('http://localhost:3050/persons')
+        .then(response => {
+          console.log("promise fulfilled")
+          setPersons(response.data)
+        })
+    },[])
+    
     //sets the currentName state from the name input box
     const setCurrentName = (event) => {
       console.log("name is:",event.target.value)
