@@ -116,26 +116,24 @@ const Weather = ({capitalName}) => {
   console.log(params)
 
   
-
-  axios
-  .get('http://api.weatherstack.com/current',{params})
+  const weatherResponse = 
+  axios.get('http://api.weatherstack.com/current',{params})
   .then((response) => {
     const apiResponse = response.data
-    console.log(apiResponse)
-  
-    console.log(apiResponse.current.temperature)
-  
+    return apiResponse
   }).catch(error => {
     console.log(error)
   })
-  
-  
-  return (
+
+  console.log("weather response is",weatherResponse)
+
+  return(
     <div>
-    <p>weather:</p>
+    <b><p>{weatherResponse.temperature}</p></b>
     </div>
-    
+
   );
+  
 }
 
 
