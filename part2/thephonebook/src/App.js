@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import phonebook from './services/phonebook'
+import phonebookServices from './services/phonebook'
+
 
 function App() {
 
@@ -19,13 +21,14 @@ function App() {
     //to the data returned in the response object.
     useEffect(() => {
       console.log("effect")
-      axios
-        .get('http://localhost:3050/persons')
-        .then(response => {
+      phonebookServices.getAll()
+        .then(resultPersons => {
           console.log("promise fulfilled")
-          setPersons(response.data)
+          setPersons(resultPersons)
         })
     },[])
+
+   
     
     //sets the currentName state from the name input box
     const setCurrentName = (event) => {
@@ -38,20 +41,40 @@ function App() {
       setNumber(event.target.value)
     }
 
+    const deleteSelectedPerson = (person) => {
+      const id = person.id
+      const result = window.confirm(`Delete ${person.name}?`)
+      console.log("inside delete selected")
+      console.log("id is:", id)
+      if(result)
+      {      
+        phonebookServices.deletePerson(id).then(deleteResponse => {console.log(deleteResponse)})
+        setPersons()
+      }   
 
+    }
     //adds a new person to the phosne book if their name isn't already included
     //an alert is given to the user if the name is a copy
     const addNewPerson = (event) => {
       event.preventDefault()
       const found = persons.find(element => element.name === newName)
+      console.log("match found" , found)
+      var newPerson = {...found,number:newNumber}
+
       if(!found){
-        var newPerson = {name:newName,number:newNumber}
         console.log(persons)
         setPersons(persons.concat(newPerson))
+        phonebookServices.create(newPerson).then(putResponse => {
+          console.log(putResponse)
+        })
+
         setNumber('')
         setName('')
       }else{
-        alert(`${newName} is already in the phonebook`)
+        const result = window.confirm(`add a new number to this existing contact?`)
+        if(result){
+          phonebookServices.updatePerson(newPerson)
+        }
         setName('')
         setNumber('')
       }
@@ -77,7 +100,7 @@ function App() {
           <Form addNewPerson={addNewPerson} setCurrentName={setCurrentName} setCurrentNumber={setCurrentNumber} newName={newName} newNumber={newNumber}/>
         
         <h2>Numbers</h2>
-          <PeopleList filteredList={filteredList}/>
+          <PeopleList filteredList={filteredList} deleteSelectedPerson = {deleteSelectedPerson}/>
       </div>
     )
   
@@ -85,12 +108,12 @@ function App() {
 
 
 //components to show a list of People in the phone book matching the current filter
-const PeopleList = ({filteredList}) => {
+const PeopleList = ({filteredList,deleteSelectedPerson}) => {
   return (
     <ul>
       {
       filteredList.map((person)=>
-        <Person key={person.name} name={person.name} number={person.number} />
+        <Person key={person.id} name={person.name} number={person.number} id={person.id} deleteButton={() => deleteSelectedPerson(person)} />
       )}
     </ul>
   );
@@ -132,11 +155,11 @@ const Filter = ({newFilter,setCurrentFilter}) => {
 
 //A person component to control how the contents of the person object 
 //is presented to the user
-const Person = ({number,name}) => {
+const Person = ({number,name,id,deleteButton}) => {
   console.log(number)
   return (
     <div>
-      <li>{name} : {number}</li>
+      <li>{name} : {number} : {id}</li> <button onClick={deleteButton}>delete</button>
     </div>
   );
 }

@@ -37,6 +37,12 @@ function App() {
   );
 }
 
+
+//Component filters the objects in the list axios retrieved
+//to those only containing the characters in the new filter
+//renders different things depending on how many results are returned
+//**MULTITPLE COUNTRIES: returns a list of components stating name of countries */
+//**ONE country: returns a different component rendering more specific details of the country */
 const Countries = ({retrievedCountries,newFilter}) => {
   const countryList = retrievedCountries.filter((element) => element.name.includes(newFilter))
   if(countryList.length > 1 && countryList.length <=10)
@@ -69,6 +75,8 @@ const Countries = ({retrievedCountries,newFilter}) => {
 
 }
 
+//component that renders a single country if the filter result
+//returns more than one item
 const CountryName = ({countryName}) => {
 
   return(
@@ -81,6 +89,9 @@ const CountryName = ({countryName}) => {
 
 }
 
+
+//component responsible for rendering specific information about a 
+//country
 const SpecificCountry = (specificCountry) => {
   
 
@@ -136,7 +147,9 @@ const Weather = ({capitalName}) => {
   
 }
 
-
+//component rendering a singular language of a country
+//if a country has multiple spoken languages, many of 
+//these components will be rendered
 const Language = ({language}) => {
   return(
     <li>
