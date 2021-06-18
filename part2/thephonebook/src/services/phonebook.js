@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = "http://localhost:3050/persons"
+const baseUrl = "http://localhost:3070/persons"
 
 //returns all people in the phonebook
 const getAll = () => {

@@ -16,6 +16,8 @@ function App() {
 
     const [filteredList,setFilteredList] = useState([])
 
+    const [errorMessage,setErroMessage]=useState(null)
+
     //queries the json server if there is a valid response
     //prints promise fulfilled and changes the persons state
     //to the data returned in the response object.
@@ -28,7 +30,6 @@ function App() {
         })
     },[])
 
-   
     
     //sets the currentName state from the name input box
     const setCurrentName = (event) => {
@@ -41,6 +42,14 @@ function App() {
       setNumber(event.target.value)
     }
 
+    const showErrorMessage = (message) => {
+
+      setErroMessage(message)
+      setTimeout(() => {
+        setErroMessage(null)
+      },5000)
+    }
+
     const deleteSelectedPerson = (person) => {
       const id = person.id
       const result = window.confirm(`Delete ${person.name}?`)
@@ -49,10 +58,12 @@ function App() {
       if(result)
       {      
         phonebookServices.deletePerson(id).then(deleteResponse => {console.log(deleteResponse)})
-        setPersons()
+        setName('')
+        setNumber('')
       }   
 
     }
+    
     //adds a new person to the phosne book if their name isn't already included
     //an alert is given to the user if the name is a copy
     const addNewPerson = (event) => {
@@ -66,6 +77,9 @@ function App() {
         setPersons(persons.concat(newPerson))
         phonebookServices.create(newPerson).then(putResponse => {
           console.log(putResponse)
+          showErrorMessage("person has been successfully added")
+        }).catch(error => {
+          showErrorMessage("an error has occured in adding new person")
         })
 
         setNumber('')
@@ -80,19 +94,26 @@ function App() {
       }
 
     }
+    
+    const filterList = () => {
+      console.log(newFilter)
+      const newlyFilteredList = persons.filter((person)=>person.name.includes(newFilter))
+      setFilteredList(newlyFilteredList)
 
+    }
 
     //sets the filter used to present the user with people in the phonebook
     //matching the input in the filter input box
     const setCurrentFilter = (event) => {
-      console.log(event.target.value)
-      setFilter(event.target.value)
-      const newlyFilteredList = persons.filter((person)=>person.name.includes(newFilter))
-      setFilteredList(newlyFilteredList)
+      const filterRetrieved = event.target.value
+      setFilter(filterRetrieved)
     }
+
+    filterList()
 
     return (
       <div>
+        <Notification message={errorMessage} />
         <h2>Phonebook</h2>
           <Filter newFilter={newFilter} setCurrentFilter={setCurrentFilter}/>
           
@@ -109,6 +130,7 @@ function App() {
 
 //components to show a list of People in the phone book matching the current filter
 const PeopleList = ({filteredList,deleteSelectedPerson}) => {
+ 
   return (
     <ul>
       {
@@ -159,9 +181,23 @@ const Person = ({number,name,id,deleteButton}) => {
   console.log(number)
   return (
     <div>
-      <li>{name} : {number} : {id}</li> <button onClick={deleteButton}>delete</button>
+      <li class="note">{name} : {number} : {id}</li> <button onClick={deleteButton}>delete</button>
     </div>
   );
+}
+
+const Notification = ({message}) => {
+
+  if(message===null){
+    return null
+  }
+
+  return(
+    <div className="error">
+      {message}
+    </div>
+  );
+
 }
 
 export default App;
