@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = "http://localhost:3070/persons"
+const baseUrl = "/api/people"
 
 //returns all people in the phonebook
 const getAll = () => {
@@ -16,7 +16,7 @@ const create = (newPerson) => {
 }
 
 const deletePerson = (id) => {
-
+    console.log(id)
     const deleteUrl = baseUrl+`/${id}`
     const request = axios.delete(deleteUrl)
     return request.then(deleteObject => deleteObject.data)
@@ -25,7 +25,7 @@ const deletePerson = (id) => {
 
 const updatePerson = (newPerson) => {
 
-    const updateUrl = baseUrl+`/${newPerson.id}`
+    const updateUrl = baseUrl+`/${newPerson._id}`
     const request = axios.put(updateUrl,newPerson)
     return request.then(response=>response.data)
 

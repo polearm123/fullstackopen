@@ -16,13 +16,15 @@ function App() {
 
     const [filteredList,setFilteredList] = useState([])
 
-    const [errorMessage,setErroMessage]=useState(null)
+    const [errorMessage,setErroMessage]=useState('no error message')
 
     //queries the json server if there is a valid response
     //prints promise fulfilled and changes the persons state
     //to the data returned in the response object.
+    console.log("hello")
+
     useEffect(() => {
-      console.log("effect")
+      console.log("inside use effect")
       phonebookServices.getAll()
         .then(resultPersons => {
           console.log("promise fulfilled")
@@ -30,7 +32,6 @@ function App() {
         })
     },[])
 
-    
     //sets the currentName state from the name input box
     const setCurrentName = (event) => {
       console.log("name is:",event.target.value)
@@ -43,15 +44,16 @@ function App() {
     }
 
     const showErrorMessage = (message) => {
-
+      
       setErroMessage(message)
       setTimeout(() => {
         setErroMessage(null)
       },5000)
+
     }
 
     const deleteSelectedPerson = (person) => {
-      const id = person.id
+      const id = person._id
       const result = window.confirm(`Delete ${person.name}?`)
       console.log("inside delete selected")
       console.log("id is:", id)
@@ -68,49 +70,58 @@ function App() {
     //an alert is given to the user if the name is a copy
     const addNewPerson = (event) => {
       event.preventDefault()
+      // console.log(`new name is ${newName}`)
+      // console.log(`new number is ${newNumber}`)
       const found = persons.find(element => element.name === newName)
       console.log("match found" , found)
-      var newPerson = {...found,number:newNumber}
 
-      if(!found){
-        console.log(persons)
-        setPersons(persons.concat(newPerson))
+      //if the name is found a confirmation is asked then the person
+      //with that name in the database is altered
+      //to have the number given in the form
+      if(found && newName){
+        console.log("inside all the things")
+        const updatePerson = {...found,name:newName,number:newNumber}
+        console.log(updatePerson)
+        return phonebookServices.updatePerson(updatePerson)
+        
+      }
+
+      var newPerson = {name:newName,number:newNumber}
+
+      
+        // setPersons(persons.concat(newPerson))
         phonebookServices.create(newPerson).then(putResponse => {
-          console.log(putResponse)
           showErrorMessage("person has been successfully added")
+          return
         }).catch(error => {
+          console.log("error")
           showErrorMessage("an error has occured in adding new person")
         })
 
         setNumber('')
         setName('')
-      }else{
-        const result = window.confirm(`add a new number to this existing contact?`)
-        if(result){
-          phonebookServices.updatePerson(newPerson)
-        }
-        setName('')
-        setNumber('')
-      }
+      
 
     }
     
-    const filterList = () => {
-      console.log(newFilter)
-      const newlyFilteredList = persons.filter((person)=>person.name.includes(newFilter))
-      setFilteredList(newlyFilteredList)
-
-    }
-
+    
     //sets the filter used to present the user with people in the phonebook
     //matching the input in the filter input box
     const setCurrentFilter = (event) => {
+      
       const filterRetrieved = event.target.value
+      const listHasFilter = persons.filter((person)=>person.name.includes(newFilter))
+      console.log("new filter is: ", filterRetrieved)
+      console.log("new filteredList is:" ,listHasFilter )
       setFilter(filterRetrieved)
+      setFilteredList(listHasFilter)
+      
     }
 
-    filterList()
+  
 
+    // const filtered = filterList()
+    
     return (
       <div>
         <Notification message={errorMessage} />
@@ -121,7 +132,7 @@ function App() {
           <Form addNewPerson={addNewPerson} setCurrentName={setCurrentName} setCurrentNumber={setCurrentNumber} newName={newName} newNumber={newNumber}/>
         
         <h2>Numbers</h2>
-          <PeopleList filteredList={filteredList} deleteSelectedPerson = {deleteSelectedPerson}/>
+          <PeopleList listOfPeople={filteredList} deleteSelectedPerson = {deleteSelectedPerson}/>
       </div>
     )
   
@@ -129,13 +140,18 @@ function App() {
 
 
 //components to show a list of People in the phone book matching the current filter
-const PeopleList = ({filteredList,deleteSelectedPerson}) => {
- 
+const PeopleList = ({listOfPeople,deleteSelectedPerson}) => {
+  
+  listOfPeople.forEach(person => {
+    console.log(person._id)
+  })
+
   return (
     <ul>
       {
-      filteredList.map((person)=>
-        <Person key={person.id} name={person.name} number={person.number} id={person.id} deleteButton={() => deleteSelectedPerson(person)} />
+      listOfPeople.map((person)=>
+        // {console.log()}
+        <Person key={person._id} name={person.name} number={person.number} id={person.id} deleteButton={() => deleteSelectedPerson(person)} />
       )}
     </ul>
   );
@@ -178,7 +194,6 @@ const Filter = ({newFilter,setCurrentFilter}) => {
 //A person component to control how the contents of the person object 
 //is presented to the user
 const Person = ({number,name,id,deleteButton}) => {
-  console.log(number)
   return (
     <div>
       <li class="note">{name} : {number} : {id}</li> <button onClick={deleteButton}>delete</button>
