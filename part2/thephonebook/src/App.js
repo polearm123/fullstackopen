@@ -59,7 +59,9 @@ function App() {
       console.log("id is:", id)
       if(result)
       {      
-        phonebookServices.deletePerson(id).then(deleteResponse => {console.log(deleteResponse)})
+        phonebookServices.deletePerson(id).then(deleteResponse => {console.log(deleteResponse)}).catch(error =>{
+          showErrorMessage(error)
+        })
         setName('')
         setNumber('')
       }   
@@ -79,11 +81,12 @@ function App() {
       //with that name in the database is altered
       //to have the number given in the form
       if(found && newName){
-        console.log("inside all the things")
+        const confirmUpdate = window.confirm(`update ${found.name}'s number from ${found.number} to ${newNumber}?`)
+        if(confirmUpdate){
         const updatePerson = {...found,name:newName,number:newNumber}
         console.log(updatePerson)
         return phonebookServices.updatePerson(updatePerson)
-        
+        }
       }
 
       var newPerson = {name:newName,number:newNumber}
@@ -92,10 +95,10 @@ function App() {
         // setPersons(persons.concat(newPerson))
         phonebookServices.create(newPerson).then(putResponse => {
           showErrorMessage("person has been successfully added")
-          return
         }).catch(error => {
-          console.log("error")
-          showErrorMessage("an error has occured in adding new person")
+          console.log("error is" , error)
+          // console.log("error",error.error)
+          showErrorMessage(error.response.data.error)
         })
 
         setNumber('')
