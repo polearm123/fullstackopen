@@ -21,20 +21,16 @@ function App() {
     //queries the json server if there is a valid response
     //prints promise fulfilled and changes the persons state
     //to the data returned in the response object.
-    console.log("hello")
 
     useEffect(() => {
-      console.log("inside use effect")
       phonebookServices.getAll()
         .then(resultPersons => {
-          console.log("promise fulfilled")
           setPersons(resultPersons)
         })
     },[])
 
     //sets the currentName state from the name input box
     const setCurrentName = (event) => {
-      console.log("name is:",event.target.value)
       setName(event.target.value)
     }
 
@@ -55,8 +51,6 @@ function App() {
     const deleteSelectedPerson = (person) => {
       const id = person._id
       const result = window.confirm(`Delete ${person.name}?`)
-      console.log("inside delete selected")
-      console.log("id is:", id)
       if(result)
       {      
         phonebookServices.deletePerson(id).then(deleteResponse => {console.log(deleteResponse)}).catch(error =>{
@@ -72,10 +66,7 @@ function App() {
     //an alert is given to the user if the name is a copy
     const addNewPerson = (event) => {
       event.preventDefault()
-      // console.log(`new name is ${newName}`)
-      // console.log(`new number is ${newNumber}`)
       const found = persons.find(element => element.name === newName)
-      console.log("match found" , found)
 
       //if the name is found a confirmation is asked then the person
       //with that name in the database is altered
@@ -84,20 +75,18 @@ function App() {
         const confirmUpdate = window.confirm(`update ${found.name}'s number from ${found.number} to ${newNumber}?`)
         if(confirmUpdate){
         const updatePerson = {...found,name:newName,number:newNumber}
-        console.log(updatePerson)
         return phonebookServices.updatePerson(updatePerson)
         }
       }
-
+      
       var newPerson = {name:newName,number:newNumber}
-
+      console.log(newPerson)
       
         // setPersons(persons.concat(newPerson))
         phonebookServices.create(newPerson).then(putResponse => {
           showErrorMessage("person has been successfully added")
         }).catch(error => {
           console.log("error is" , error)
-          // console.log("error",error.error)
           showErrorMessage(error.response.data.error)
         })
 
@@ -114,8 +103,6 @@ function App() {
       
       const filterRetrieved = event.target.value
       const listHasFilter = persons.filter((person)=>person.name.includes(newFilter))
-      console.log("new filter is: ", filterRetrieved)
-      console.log("new filteredList is:" ,listHasFilter )
       setFilter(filterRetrieved)
       setFilteredList(listHasFilter)
       
@@ -146,14 +133,12 @@ function App() {
 const PeopleList = ({listOfPeople,deleteSelectedPerson}) => {
   
   listOfPeople.forEach(person => {
-    console.log(person._id)
   })
 
   return (
     <ul>
       {
       listOfPeople.map((person)=>
-        // {console.log()}
         <Person key={person._id} name={person.name} number={person.number} id={person.id} deleteButton={() => deleteSelectedPerson(person)} />
       )}
     </ul>
