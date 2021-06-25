@@ -1,3 +1,5 @@
+const lodash = require('lodash')
+
 const dummy = (blogs) => {
     return 1
 
@@ -13,15 +15,45 @@ const totalLikes = (blogs) => {
 }
 
 const favouriteBlog = (blogs) => {
-    //finds maxLikes by mapping blogs array of numbers and finding max
-    //then finds the blog with exactly that many likes
-
-    // const maxLikes = Math.max(blogs.map(blog => {
-    //     return blog.likes
-    // }))
+   
     const mappedList = blogs.map(blog => Number(blog.likes))
     const maxNumber = Math.max(...mappedList)
     return blogs.find(blog => blog.likes === maxNumber)
 }
 
-module.exports = {dummy,totalLikes,favouriteBlog}
+
+//iterate through the blog objects and find who has
+//authored the most blogs
+const mostBlogs = (blogs) => {
+   
+    var AuthorList = []
+    blogs.forEach(blog => {
+
+       const found = AuthorList.find(author => author.name === blog.author)
+       if(found===undefined || AuthorList.length === 0){
+            const newAuthor = {
+                name:blog.author,
+                count:1
+            }
+            AuthorList.push(newAuthor)
+       }else if(found!==undefined){
+            const authorIndex = AuthorList.findIndex(authorObject => authorObject.name === found.name)
+            AuthorList[authorIndex].count+=1 
+       }
+
+    })
+
+    //uses lodash to find the max count in the authorList
+    return lodash.maxBy(AuthorList, (author) => {return author.count}).name
+
+}
+
+
+//returns the name of the author with the blog that has the most likes
+const mostLikes = (blogs) => {
+    const maxLikes =  lodash.maxBy(blogs, (blog) => {
+        return blog.likes})
+    return maxLikes.author
+}
+
+module.exports = {dummy,totalLikes,favouriteBlog,mostBlogs,mostLikes}

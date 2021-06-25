@@ -44,17 +44,136 @@ describe('favourite Blog', () => {
         __v: 0
       },
       {
-        _id: '5a422aa71b54a676234d17f9',
+        _id: '5a422aa71b54a676234d17f12',
         title: 'Creationist',
         author: 'Good day to you sir',
         url: 'http://www.u.MRCreationIst.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 25,
+        __v: 0
+      },
+      {
+        _id: '5a422aa71b54a676234d17f10',
+        title: 'Creationist',
+        author: 'Good day to you sir',
+        url: 'http://www.u.dad.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 20,
+        __v: 0
+      },
+      {
+        _id: '5a422aa71b54a676234d17f11',
+        title: 'Creationist',
+        author: 'Good day to you sir',
+        url: 'http://www.u.da112.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 20,
         __v: 0
       }
+      
     ]
 
     test('when the list is larger the favourite blog is the one with the highest number of likes', ()=>{
         const result = helper.favouriteBlog(listWithBlogs)._id
-        expect(result).toBe("5a422aa71b54a676234d17f9")
+        expect(result).toBe("5a422aa71b54a676234d17f12")
     })
 })
+
+describe('test for the author with the most blogs' , () => {
+  const listWithBlogs = [{
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 1,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f7',
+    title: 'Not my problem',
+    author: 'Mr Allan Turing',
+    url: 'http://www.u.MrTuringCreations.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 50,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f12',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.MRCreationIst.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f10',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.dad.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f11',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.da112.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  }
+  
+]
+
+  test('the author with the most blogs is', () => {
+    const result = helper.mostBlogs(listWithBlogs)
+    expect(result).toBe('Good day to you sir')
+  }
+
+)})
+
+describe('test for the author with the most likes' , () => {
+  const listWithBlogs = [{
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 1,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f7',
+    title: 'Not my problem',
+    author: 'Mr Allan Turing',
+    url: 'http://www.u.MrTuringCreations.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 50,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f12',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.MRCreationIst.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f10',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.dad.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f11',
+    title: 'Creationist',
+    author: 'Good day to you sir',
+    url: 'http://www.u.da112.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 20,
+    __v: 0
+  }
+  
+]
+
+  test('the author with the most blogs is', () => {
+    const result = helper.mostLikes(listWithBlogs)
+    expect(result).toBe('Mr Allan Turing')
+  }
+
+)})
